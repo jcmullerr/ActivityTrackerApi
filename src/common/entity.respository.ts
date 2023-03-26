@@ -8,7 +8,6 @@ export abstract class EntityRepository<T extends Document> {
     projection?: Record<string, unknown>,
   ): Promise<T | null> {
     return this.entityModel.findOne(entityFilterQuery, {
-      _id: 0,
       __v: 0,
       ...projection,
     });
@@ -17,9 +16,8 @@ export abstract class EntityRepository<T extends Document> {
   async find(
     entityFilterQuery: FilterQuery<T>,
     projection?: Record<string, unknown>,
-  ): Promise<T[] | null> {
+  ): Promise<T[]> {
     return this.entityModel.find(entityFilterQuery, {
-      _id: 0,
       __v: 0,
       ...projection,
     });

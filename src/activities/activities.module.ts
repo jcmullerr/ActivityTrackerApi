@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ActivitiesService } from './activities.service';
 import { ActivitiesController } from './activities.controller';
-import { MongooseModule } from '@nestjs/mongoose/dist';
+import { MongooseModule } from '@nestjs/mongoose';
 import { Activity, ActivitySchema } from './entities/activity.entity';
 import { ActivitiesRepository } from './activities.repository';
 

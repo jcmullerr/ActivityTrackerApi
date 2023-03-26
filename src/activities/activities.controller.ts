@@ -3,45 +3,49 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
+  Put,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger/dist/decorators';
+import { ParseUUIDPipe } from '@nestjs/common/pipes';
+import { AuthGuard } from '@nestjs/passport';
+import { ApiTags } from '@nestjs/swagger';
 import { ActivitiesService } from './activities.service';
 import { CreateActivityDto } from './dto/create-activity.dto';
 import { UpdateActivityDto } from './dto/update-activity.dto';
 
 @ApiTags('activities')
-@Controller('activities')
+@Controller('api/activities')
+@UseGuards(AuthGuard('jwt'))
 export class ActivitiesController {
   constructor(private readonly activitiesService: ActivitiesService) {}
 
   @Post()
-  create(@Body() createActivityDto: CreateActivityDto) {
-    return this.activitiesService.create(createActivityDto);
+  async create(@Body() createActivityDto: CreateActivityDto) {
+    return await this.activitiesService.create(createActivityDto);
   }
 
   @Get()
-  findAll() {
-    return this.activitiesService.get();
+  async findAll() {
+    return await this.activitiesService.get();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.activitiesService.getById(id);
+  async findOne(@Param('id', new ParseUUIDPipe()) id: string) {
+    return await this.activitiesService.getById(id);
   }
 
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
+  @Put(':id')
+  async update(
+    @Param('id', new ParseUUIDPipe()) id: string,
     @Body() updateActivityDto: UpdateActivityDto,
   ) {
-    return this.activitiesService.update(id, updateActivityDto);
+    return await this.activitiesService.update(id, updateActivityDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.activitiesService.remove(id);
+  async remove(@Param('id', new ParseUUIDPipe()) id: string) {
+    return await this.activitiesService.remove(id);
   }
 }

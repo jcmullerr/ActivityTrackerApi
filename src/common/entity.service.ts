@@ -1,26 +1,36 @@
-import { Document } from 'mongoose';
+import { Document, FilterQuery } from 'mongoose';
 import { EntityRepository } from './entity.respository';
 
 export abstract class EntityService<T extends Document> {
   constructor(protected readonly entityRepository: EntityRepository<T>) {}
 
-  create(createEntityDto: unknown) {
-    return this.entityRepository.create(createEntityDto);
+  async create(createEntityDto: unknown): Promise<T> {
+    return await this.entityRepository.create(createEntityDto);
   }
 
-  get() {
-    return this.entityRepository.find({});
+  async get(): Promise<T[]> {
+    return await this.entityRepository.find({});
   }
 
-  getById(id: string, projection?: Record<string, unknown>) {
-    return this.entityRepository.findOne({ _id: id }, projection);
+  async getByFilter(entityFilterQuery: FilterQuery<T>): Promise<T[]> {
+    return await this.entityRepository.find(entityFilterQuery);
   }
 
-  update(id: string, updateEntityDto: any) {
-    return this.entityRepository.findOneAndUpdate({ _id: id }, updateEntityDto);
+  async getById(
+    id: string,
+    projection?: Record<string, unknown>,
+  ): Promise<T | null> {
+    return await this.entityRepository.findOne({ _id: id }, projection);
   }
 
-  remove(id: string) {
-    return this.entityRepository.deleteMany({ _id: id });
+  async update(id: string, updateEntityDto: any): Promise<T | null> {
+    return await this.entityRepository.findOneAndUpdate(
+      { _id: id },
+      updateEntityDto,
+    );
+  }
+
+  async remove(id: string): Promise<boolean> {
+    return await this.entityRepository.deleteMany({ _id: id });
   }
 }

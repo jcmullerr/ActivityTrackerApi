@@ -4,6 +4,7 @@ import { ActivitiesModule } from './activities/activities.module';
 import { EventsModule } from './events/events.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { MongooseModule } from '@nestjs/mongoose';
         uri: config.get<string>('MONGO_DB_CONNECTION_STRING'),
       }),
     }),
+    AuthModule,
   ],
   controllers: [],
   providers: [],
